@@ -11,14 +11,16 @@ on:
                 type: string
                 default: "terraform"
 
-defaults:
-    run:
-        shell: bash
-        working-directory: ${{ inputs.working-dir }}
+env:
+    WORKING-DIR: ${{ inputs.working-dir }}
 
 jobs:
     plan:
         runs-on: ubuntu-latest
+        defaults:
+            run:
+                shell: bash
+                working-directory: ${{ env.WORKING-DIR }}
         steps:
             - uses: actions/checkout@v4
             - uses: hashicorp/setup-terraform@v3
