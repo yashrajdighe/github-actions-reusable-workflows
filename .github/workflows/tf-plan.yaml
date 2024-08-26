@@ -32,7 +32,8 @@ jobs:
             - name: Get secrets
               uses: aws-actions/aws-secretsmanager-get-secrets@v2
               with:
-                secret-ids: github-actions/terraform-cloud
+                secret-ids: |
+                    TFE_TOKEN, github-actions/terraform-cloud
                 name-transformation: lowercase
             - uses: hashicorp/setup-terraform@v3
               with:
