@@ -17,9 +17,6 @@ env:
 jobs:
     plan:
         runs-on: ubuntu-latest
-        permissions:
-            contents: read
-            id-token: write
         defaults:
             run:
                 shell: bash
