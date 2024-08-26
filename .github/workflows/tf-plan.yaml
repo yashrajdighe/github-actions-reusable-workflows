@@ -33,7 +33,7 @@ jobs:
               uses: aws-actions/aws-secretsmanager-get-secrets@v2
               with:
                 secret-ids: |
-                    TFE_TOKEN, github-actions/terraform-cloud
+                    TFE_TOKEN, arn:aws:secretsmanager:us-east-1:183631350996:secret:github-actions/terraform-cloud-AJdvsd
                 name-transformation: lowercase
             - uses: hashicorp/setup-terraform@v3
               with:
