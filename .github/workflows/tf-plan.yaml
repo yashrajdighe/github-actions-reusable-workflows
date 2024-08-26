@@ -12,12 +12,9 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
-              with:
-                ref: CLOUD-2-test-tf-plan-workflow
     list-directories:
         needs: checkout
         runs-on: ubuntu-latest
         steps:
             - run: |
-                pwd
                 ls
