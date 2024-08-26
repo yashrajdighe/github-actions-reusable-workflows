@@ -41,3 +41,5 @@ jobs:
                 terraform_version: ${{ inputs.terraform-cli-version }}
             - id: init
               run: terraform init
+            - id: plan
+              run: terraform plan
