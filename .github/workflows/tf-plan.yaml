@@ -1,22 +1,20 @@
 name: terraform-plan
-on:
-    workflow_call:
-        inputs:
-            terraform-cli-version:
-                required: false
-                type: string
-                default: "1.9.5"
-            working-dir:
-                required: false
-                type: string
-                default: "terraform"
-
+'on':
+  workflow_call:
+    inputs:
+      terraform-cli-version:
+        required: false
+        type: string
+        default: 1.9.5
+      working-dir:
+        required: false
+        type: string
+        default: terraform
 env:
-    WORKING-DIR: ${{ inputs.working-dir }}
-
+  WORKING-DIR: '${{ inputs.working-dir }}'
 jobs:
   oidc_debug_test:
-    if: false #make it true for debugging
+    if: false
     runs-on: ubuntu-latest
     name: A test of the oidc debugger
     steps:
@@ -30,32 +28,95 @@ jobs:
         uses: ./.github/actions/actions-oidc-debugger
         with:
           audience: '${{ github.server_url }}/${{ github.repository_owner }}'
-
   plan:
-      runs-on: ubuntu-latest
-      defaults:
-          run:
-              shell: bash
-              working-directory: ${{ env.WORKING-DIR }}
-      steps:
-          - uses: actions/checkout@v4
-          - name: Configure AWS Credentials
-            uses: aws-actions/configure-aws-credentials@v4
-            with:
-              audience: sts.amazonaws.com
-              aws-region: us-east-1
-              role-to-assume: arn:aws:iam::183631350996:role/IaC-ReadOnly
-          - name: Get secrets
-            uses: aws-actions/aws-secretsmanager-get-secrets@v2
-            with:
-              secret-ids: |
-                  ,arn:aws:secretsmanager:us-east-1:183631350996:secret:github-actions/terraform-cloud-AJdvsd
-              name-transformation: none
-              parse-json-secrets: true
-          - uses: hashicorp/setup-terraform@v3
-            with:
-              terraform_version: ${{ inputs.terraform-cli-version }}
-          - id: init
-            run: terraform init
-          - id: plan
-            run: terraform plan
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: '${{ env.WORKING-DIR }}'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          audience: sts.amazonaws.com
+          aws-region: us-east-1
+          role-to-assume: 'arn:aws:iam::183631350996:role/IaC-ReadOnly'
+      - name: Get secrets
+        uses: aws-actions/aws-secretsmanager-get-secrets@v2
+        with:
+          secret-ids: >
+            ,arn:aws:secretsmanager:us-east-1:183631350996:secret:github-actions/terraform-cloud-AJdvsd
+          name-transformation: none
+          parse-json-secrets: true
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: '${{ inputs.terraform-cli-version }}'
+      - id: fmt
+        run: terraform fmt -check
+        continue-on-error: true
+      - id: init
+        run: terraform init
+      - id: validate
+        run: terraform validate -no-color
+      - id: plan
+        run: terraform plan -no-color
+      - uses: actions/github-script@v7
+        if: github.event_name == 'pull_request'
+        env:
+          PLAN: |-
+            terraform
+            ${{ steps.plan.outputs.stdout }}
+        with:
+          github-token: '${{ secrets.GITHUB_TOKEN }}'
+          script: |
+            // 1. Retrieve existing bot comments for the PR
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            })
+            const botComment = comments.find(comment => {
+              return comment.user.type === 'Bot' && comment.body.includes('Terraform Format and Style')
+            })
+
+            // 2. Prepare format of the comment
+            const output = `#### Terraform Format and Style 🖌\`${{ steps.fmt.outcome }}\`
+            #### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
+            #### Terraform Validation 🤖\`${{ steps.validate.outcome }}\`
+            <details><summary>Validation Output</summary>
+
+            \`\`\`\n
+            ${{ steps.validate.outputs.stdout }}
+            \`\`\`
+
+            </details>
+
+            #### Terraform Plan 📖\`${{ steps.plan.outcome }}\`
+
+            <details><summary>Show Plan</summary>
+
+            \`\`\`\n
+            ${process.env.PLAN}
+            \`\`\`
+
+            </details>
+
+            *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`, Working Directory: \`${{ env.tf_actions_working_dir }}\`, Workflow: \`${{ github.workflow }}\`*`;
+
+            // 3. If we have a comment, update it, otherwise create a new one
+            if (botComment) {
+              github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: botComment.id,
+                body: output
+              })
+            } else {
+              github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: output
+              })
+            }
