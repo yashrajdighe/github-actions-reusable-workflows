@@ -11,5 +11,6 @@ jobs:
     list-directories:
         runs-on: ubuntu-latest
         steps:
+            - uses: actions/checkout@v4
             - run: |
                 ls
