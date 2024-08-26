@@ -34,7 +34,6 @@ jobs:
               with:
                 secret-ids: |
                     TFE_TOKEN, arn:aws:secretsmanager:us-east-1:183631350996:secret:github-actions/terraform-cloud-AJdvsd
-                name-transformation: lowercase
             - uses: hashicorp/setup-terraform@v3
               with:
                 terraform_version: ${{ inputs.terraform-cli-version }}
