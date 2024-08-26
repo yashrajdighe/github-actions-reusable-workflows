@@ -13,6 +13,7 @@ jobs:
         steps:
             - uses: actions/checkout@v4
     list-directories:
+        needs: checkout
         runs-on: ubuntu-latest
         steps:
             - run: |
