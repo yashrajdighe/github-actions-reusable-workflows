@@ -16,6 +16,7 @@ env:
 
 jobs:
   oidc_debug_test:
+    if: false #make it true for debugging
     runs-on: ubuntu-latest
     name: A test of the oidc debugger
     steps:
