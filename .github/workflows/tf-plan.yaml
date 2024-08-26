@@ -13,7 +13,7 @@ jobs:
         steps:
             - uses: actions/checkout@v4
               with:
-                ref: main
+                ref: CLOUD-2-test-tf-plan-workflow
     list-directories:
         needs: checkout
         runs-on: ubuntu-latest
