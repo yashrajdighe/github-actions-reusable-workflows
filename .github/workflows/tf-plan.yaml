@@ -23,6 +23,17 @@ jobs:
                 working-directory: ${{ env.WORKING-DIR }}
         steps:
             - uses: actions/checkout@v4
+            - name: Configure AWS Credentials
+              uses: aws-actions/configure-aws-credentials@v4
+              with:
+                audience: sts.amazonaws.com
+                aws-region: us-east-1
+                role-to-assume: arn:aws:iam::183631350996:role/IaC-ReadOnly
+            - name: Get secrets
+              uses: aws-actions/aws-secretsmanager-get-secrets@v2
+              with:
+                secret-ids: github-actions/terraform-cloud
+                name-transformation: lowercase
             - uses: hashicorp/setup-terraform@v3
               with:
                 terraform_version: ${{ inputs.terraform-cli-version }}
