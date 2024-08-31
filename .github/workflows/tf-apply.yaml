@@ -10,11 +10,15 @@ name: terraform-apply
         required: false
         type: string
         default: terraform
+      enable-oidc-debugger:
+        required: false
+        type: boolean
+        default: false
 env:
   WORKING-DIR: '${{ inputs.working-dir }}'
 jobs:
   oidc_debug_test:
-    if: true
+    if: ${{ inputs.enable-oidc-debugger }}
     runs-on: ubuntu-latest
     name: A test of the oidc debugger
     steps:
