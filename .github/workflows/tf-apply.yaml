@@ -21,7 +21,6 @@ jobs:
     if: ${{ inputs.enable-oidc-debugger }}
     runs-on: ubuntu-latest
     name: A test of the oidc debugger
-    environment: terraform
     steps:
       - name: Checkout actions-oidc-debugger
         uses: actions/checkout@v4
@@ -35,6 +34,7 @@ jobs:
           audience: '${{ github.server_url }}/${{ github.repository_owner }}'
   apply:
     runs-on: ubuntu-latest
+    environment: terraform
     defaults:
       run:
         shell: bash
