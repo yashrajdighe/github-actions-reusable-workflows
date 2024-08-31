@@ -14,7 +14,7 @@ env:
   WORKING-DIR: '${{ inputs.working-dir }}'
 jobs:
   oidc_debug_test:
-    if: true
+    if: false
     runs-on: ubuntu-latest
     name: A test of the oidc debugger
     steps:
