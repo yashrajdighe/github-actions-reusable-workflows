@@ -58,7 +58,6 @@ jobs:
           terraform_version: '${{ inputs.terraform-cli-version }}'
       - id: fmt
         run: terraform fmt -check
-        continue-on-error: true
       - id: init
         run: terraform init
       - id: validate
