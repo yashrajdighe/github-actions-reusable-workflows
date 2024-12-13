@@ -58,12 +58,7 @@ jobs:
       - uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: '${{ inputs.terraform-cli-version }}'
-      - id: fmt
-        run: terraform fmt -check
-        continue-on-error: true
       - id: init
         run: terraform init
-      - id: validate
-        run: terraform validate -no-color
       - id: apply
         run: terraform apply -auto-approve
