@@ -81,4 +81,4 @@ jobs:
           tg_version: ${{ inputs.tg_version }}
           tg_dir: ${{ inputs.working_directory }}
           tg_command: 'run-all plan'
-          tg_comment: true
+          tg_comment: 1
