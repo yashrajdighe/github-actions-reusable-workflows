@@ -66,6 +66,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ inputs.role_to_assume }}
+          aws-region: us-east-1
 
   plan:
     runs-on: ubuntu-latest
