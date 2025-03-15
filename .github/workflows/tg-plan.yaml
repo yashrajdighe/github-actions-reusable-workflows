@@ -26,6 +26,10 @@ on:
         required: false
         type: boolean
         default: false
+      github_token:
+        description: 'GitHub Token'
+        required: true
+        type: string
 
 jobs:
   oidc_debug_test:
@@ -62,6 +66,8 @@ jobs:
     permissions:
       id-token: write
       contents: read
+    env:
+      GITHUB_TOKEN: ${{ inputs.github_token }}
     steps:
       - name: 'Checkout'
         uses: actions/checkout@v4
@@ -79,3 +85,4 @@ jobs:
           tg_version: ${{ inputs.tg_version }}
           tg_dir: ${{ inputs.working_directory }}
           tg_command: 'run-all plan'
+          tg_comment: true
