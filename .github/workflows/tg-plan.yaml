@@ -62,6 +62,8 @@ jobs:
     permissions:
       id-token: write
       contents: read
+    env:
+      GITHUB_TOKEN: ${{ secrets.github_token }}
     steps:
       - name: 'Checkout'
         uses: actions/checkout@v4
