@@ -54,26 +54,22 @@ jobs:
           tg_version: ${{ inputs.tg_version }}
           tg_dir: ${{ inputs.working_directory }}
           tg_command: 'hclfmt --terragrunt-check --terragrunt-diff'
-  
-  aws-configure:
+
+  plan:
     runs-on: ubuntu-latest
-    needs: [ checks ]
+    needs: [ aws-configure ]
     permissions:
       id-token: write
       contents: read
     steps:
+      - name: 'Checkout'
+        uses: actions/checkout@v4
+
       - name: Configure AWS Credentials for Terragrunt
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ inputs.role_to_assume }}
           aws-region: us-east-1
-
-  plan:
-    runs-on: ubuntu-latest
-    needs: [ aws-configure ]
-    steps:
-      - name: 'Checkout'
-        uses: actions/checkout@v4
 
       - name: Plan
         uses: gruntwork-io/terragrunt-action@v2
