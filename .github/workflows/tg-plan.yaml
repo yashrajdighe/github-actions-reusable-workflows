@@ -65,7 +65,7 @@ jobs:
       - name: 'Checkout'
         uses: actions/checkout@v4
 
-      - name: Configure AWS Credentials for Terragrunt
+      - name: Configure AWS Credentials for Terragrunt Plan
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ inputs.role_to_assume_plan }}
