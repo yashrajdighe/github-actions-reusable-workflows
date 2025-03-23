@@ -17,8 +17,8 @@ on:
         description: 'Working directory for terragrunt'
         required: true
         type: string
-      role_to_assume:
-        description: 'Role to assume for Terragrunt'
+      role_to_assume_plan:
+        description: 'Role to assume for Terragrunt Plan'
         required: true
         type: string
       enable_oidc_debugger:
@@ -68,7 +68,7 @@ jobs:
       - name: Configure AWS Credentials for Terragrunt
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: ${{ inputs.role_to_assume }}
+          role-to-assume: ${{ inputs.role_to_assume_plan }}
           aws-region: us-east-1
 
       - name: Plan
