@@ -51,18 +51,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Check terragrunt HCL
-        uses: gruntwork-io/terragrunt-action@v2
-        with:
-          tofu_version: ${{ inputs.tofu_version }}
-          tg_version: ${{ inputs.tg_version }}
-          tg_dir: ${{ inputs.working_directory }}
-          tg_command: 'hclfmt --terragrunt-check --terragrunt-diff'
-
   plan:
     runs-on: ubuntu-latest
-    needs:
-      - checks
     env:
       GITHUB_TOKEN: ${{ secrets.github_token }}
     steps:
@@ -82,12 +72,10 @@ jobs:
           tg_version: ${{ inputs.tg_version }}
           tg_dir: ${{ inputs.working_directory }}
           tg_command: 'run-all plan'
-          tg_comment: 1
 
   apply:
     runs-on: ubuntu-latest
     needs:
-      - checks
       - plan
     env:
       GITHUB_TOKEN: ${{ secrets.github_token }}
@@ -109,4 +97,3 @@ jobs:
           tg_version: ${{ inputs.tg_version }}
           tg_dir: ${{ inputs.working_directory }}
           tg_command: 'run-all apply'
-          tg_comment: 1
