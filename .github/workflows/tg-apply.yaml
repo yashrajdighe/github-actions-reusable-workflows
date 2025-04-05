@@ -50,9 +50,19 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+      
+      - name: Check terragrunt HCL
+        uses: gruntwork-io/terragrunt-action@v2
+        with:
+          tofu_version: ${{ inputs.tofu_version }}
+          tg_version: ${{ inputs.tg_version }}
+          tg_dir: ${{ inputs.working_directory }}
+          tg_command: 'hclfmt --terragrunt-check --terragrunt-diff'
 
   plan:
     runs-on: ubuntu-latest
+    container:
+      image: 'public.ecr.aws/z5i5o7e1/yashrajdighe/my-iac:latest'
     env:
       GITHUB_TOKEN: ${{ secrets.github_token }}
     steps:
@@ -66,15 +76,14 @@ jobs:
           aws-region: us-east-1
 
       - name: Plan
-        uses: gruntwork-io/terragrunt-action@v2
-        with:
-          tofu_version: ${{ inputs.tofu_version }}
-          tg_version: ${{ inputs.tg_version }}
-          tg_dir: ${{ inputs.working_directory }}
-          tg_command: 'run-all plan'
+        shell: bash
+        working-directory: ${{ inputs.working_directory }}
+        run: terragrunt run-all plan
 
   apply:
     runs-on: ubuntu-latest
+    container:
+      image: 'public.ecr.aws/z5i5o7e1/yashrajdighe/my-iac:latest'
     needs:
       - plan
     env:
@@ -90,10 +99,8 @@ jobs:
           role-to-assume: ${{ inputs.role_to_assume }}
           aws-region: us-east-1
 
-      - name: apply
-        uses: gruntwork-io/terragrunt-action@v2
-        with:
-          tofu_version: ${{ inputs.tofu_version }}
-          tg_version: ${{ inputs.tg_version }}
-          tg_dir: ${{ inputs.working_directory }}
-          tg_command: 'run-all apply'
+      - name: Apply
+        shell: bash
+        working-directory: ${{ inputs.working_directory }}
+        run: terragrunt run-all apply --auto-approve
+  
