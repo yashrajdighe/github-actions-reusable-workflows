@@ -4,25 +4,25 @@ on:
   workflow_call:
     inputs:
       tofu_version:
-        description: 'Tofu version'
+        description: "Tofu version"
         required: false
         type: string
-        default: '1.8.1'
+        default: "1.8.1"
       tg_version:
-        description: 'Terragrunt version'
+        description: "Terragrunt version"
         required: false
         type: string
-        default: '0.67.0'
+        default: "0.67.0"
       working_directory:
-        description: 'Working directory for terragrunt'
+        description: "Working directory for terragrunt"
         required: true
         type: string
       role_to_assume:
-        description: 'Role to assume for Terragrunt Plan Workflow'
+        description: "Role to assume for Terragrunt Plan Workflow"
         required: true
         type: string
       enable_oidc_debugger:
-        description: 'Enable OIDC Debugger'
+        description: "Enable OIDC Debugger"
         required: false
         type: boolean
         default: false
@@ -39,7 +39,7 @@ jobs:
       - name: Debug OIDC Claims
         uses: github/actions-oidc-debugger@main
         with:
-          audience: '${{ github.server_url }}/${{ github.repository_owner }}'
+          audience: "${{ github.server_url }}/${{ github.repository_owner }}"
 
   checks:
     runs-on: ubuntu-latest
@@ -53,18 +53,18 @@ jobs:
           tofu_version: ${{ inputs.tofu_version }}
           tg_version: ${{ inputs.tg_version }}
           tg_dir: ${{ inputs.working_directory }}
-          tg_command: 'hclfmt --terragrunt-check --terragrunt-diff'
+          tg_command: "hclfmt --terragrunt-check --terragrunt-diff"
 
   plan:
     runs-on: ubuntu-latest
     container:
-      image: 'public.ecr.aws/z5i5o7e1/yashrajdighe/my-iac:latest'
+      image: "public.ecr.aws/z5i5o7e1/yashrajdighe/my-iac:latest"
     needs:
       - checks
     env:
       GITHUB_TOKEN: ${{ secrets.github_token }}
     steps:
-      - name: 'Checkout'
+      - name: "Checkout"
         uses: actions/checkout@v4
 
       - name: Configure AWS Credentials for Terragrunt Plan
@@ -76,4 +76,5 @@ jobs:
       - name: Plan
         shell: bash
         working-directory: ${{ inputs.working_directory }}
-        run: terragrunt run-all plan --terragrunt-non-interactive
+        run: |
+          terragrunt run-all plan --provider-cache --terragrunt-non-interactive
