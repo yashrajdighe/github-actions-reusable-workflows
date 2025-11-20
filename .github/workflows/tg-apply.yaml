@@ -66,6 +66,7 @@ jobs:
     env:
       GITHUB_TOKEN: ${{ secrets.github_token }}
       TG_PROVIDER_CACHE: 1
+      TG_PROVIDER_CACHE_DIR: "/tmp/.terragrunt-cache"
     steps:
       - name: "Checkout"
         uses: actions/checkout@v4
@@ -90,6 +91,7 @@ jobs:
     env:
       GITHUB_TOKEN: ${{ secrets.github_token }}
       TG_PROVIDER_CACHE: 1
+      TG_PROVIDER_CACHE_DIR: "/tmp/.terragrunt-cache"
     environment: ${{ inputs.github_environment }}
     steps:
       - name: "Checkout"
