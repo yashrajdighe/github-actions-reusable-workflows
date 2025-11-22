@@ -27,6 +27,9 @@ on:
         type: boolean
         default: false
 
+env:
+  TF_PLUGIN_CACHE_DIR: ${{ github.workspace }}/.terraform.d/plugin-cache
+
 jobs:
   oidc_debug_test:
     if: ${{ inputs.enable_oidc_debugger }}
@@ -63,11 +66,12 @@ jobs:
       - checks
     env:
       GITHUB_TOKEN: ${{ secrets.github_token }}
-      TG_PROVIDER_CACHE: 1
-      TG_PROVIDER_CACHE_DIR: "/tmp/.terragrunt-cache"
     steps:
       - name: "Checkout"
         uses: actions/checkout@v4
+
+      - name: Create Cache Directory
+        run: mkdir -p $TF_PLUGIN_CACHE_DIR
 
       - name: Configure AWS Credentials for Terragrunt Plan
         uses: aws-actions/configure-aws-credentials@v4
