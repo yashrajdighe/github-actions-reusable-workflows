@@ -56,6 +56,8 @@ jobs:
       GITHUB_TOKEN: ${{ secrets.github_token }}
       TG_PROVIDER_CACHE: 1
       TG_PROVIDER_CACHE_DIR: "/tmp/.terragrunt-cache"
+      TERRAGRUNT_NON_INTERACTIVE: true # for backward compatibility
+      TG_NON_INTERACTIVE: true
     environment: ${{ inputs.github_environment }}
     steps:
       - name: "Checkout"
