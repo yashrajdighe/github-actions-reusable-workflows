@@ -4,36 +4,43 @@ on:
   workflow_call:
     inputs:
       tofu_version:
-        description: 'Tofu version'
+        description: "Tofu version"
         required: false
         type: string
-        default: '1.8.1'
+        default: "1.8.1"
       tg_version:
-        description: 'Terragrunt version'
+        description: "Terragrunt version"
         required: false
         type: string
-        default: '0.67.0'
+        default: "0.67.0"
       working_directory:
-        description: 'Working directory for terragrunt'
+        description: "Working directory for terragrunt"
         required: true
         type: string
       role_to_assume:
-        description: 'Role to assume for Terragrunt Import Workflow'
+        description: "Role to assume for Terragrunt Import Workflow"
         required: true
         type: string
       resource_name:
-        description: 'Name of the resource to import'
+        description: "Name of the resource to import"
         required: true
         type: string
       resource_id:
-        description: 'ID of the resource to import'
+        description: "ID of the resource to import"
         required: true
         type: string
       enable_oidc_debugger:
-        description: 'Enable OIDC Debugger'
+        description: "Enable OIDC Debugger"
         required: false
         type: boolean
         default: false
+      cloudflare_api_token:
+        description: "Cloudflare API Token"
+        required: true
+        type: string
+
+env:
+  CLOUDFLARE_API_TOKEN: ${{ inputs.cloudflare_api_token }}
 
 jobs:
   oidc_debug_test:
@@ -47,14 +54,14 @@ jobs:
       - name: Debug OIDC Claims
         uses: github/actions-oidc-debugger@main
         with:
-          audience: '${{ github.server_url }}/${{ github.repository_owner }}'
+          audience: "${{ github.server_url }}/${{ github.repository_owner }}"
 
   import:
     runs-on: ubuntu-latest
     env:
       GITHUB_TOKEN: ${{ secrets.github_token }}
     steps:
-      - name: 'Checkout'
+      - name: "Checkout"
         uses: actions/checkout@v4
 
       - name: Configure AWS Credentials for Terragrunt Import
@@ -69,4 +76,4 @@ jobs:
           tofu_version: ${{ inputs.tofu_version }}
           tg_version: ${{ inputs.tg_version }}
           tg_dir: ${{ inputs.working_directory }}
-          tg_command: 'import ${{ inputs.resource_name }} ${{ inputs.resource_id }}'
+          tg_command: "import ${{ inputs.resource_name }} ${{ inputs.resource_id }}"
