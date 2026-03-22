@@ -30,9 +30,13 @@ on:
         description: "GitHub Environment"
         required: true
         type: string
-
+      cloudflare_api_token:
+        description: "Cloudflare API Token"
+        required: true
+        type: string
 env:
   TF_PLUGIN_CACHE_DIR: ${{ github.workspace }}/.terraform.d/plugin-cache
+  CLOUDFLARE_API_TOKEN: ${{ inputs.cloudflare_api_token }}
 
 jobs:
   oidc_debug_test:
