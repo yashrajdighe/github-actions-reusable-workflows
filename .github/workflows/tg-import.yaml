@@ -76,4 +76,5 @@ jobs:
           tofu_version: ${{ inputs.tofu_version }}
           tg_version: ${{ inputs.tg_version }}
           tg_dir: ${{ inputs.working_directory }}
-          tg_command: "import ${{ inputs.resource_name }} ${{ inputs.resource_id }}"
+          tg_command: >-
+            import ${{ inputs.resource_name }} ${{ inputs.resource_id }}
