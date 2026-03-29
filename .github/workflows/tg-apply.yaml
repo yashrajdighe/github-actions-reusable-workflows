@@ -30,6 +30,14 @@ on:
         description: "GitHub Environment"
         required: true
         type: string
+      workload_identity_provider:
+        description: "Workload Identity Provider"
+        required: true
+        type: string
+      service_account:
+        description: "Service Account"
+        required: true
+        type: string
 
 env:
   TF_PLUGIN_CACHE_DIR: ${{ github.workspace }}/.terraform.d/plugin-cache
@@ -72,6 +80,13 @@ jobs:
         with:
           role-to-assume: ${{ inputs.role_to_assume }}
           aws-region: us-east-1
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v3
+        with:
+          create_credentials_file: true
+          workload_identity_provider: ${{ inputs.workload_identity_provider }}
+          service_account: ${{ inputs.service_account }}
 
       # Added init step to avoid race condition with cache directory creation
       - name: Init
