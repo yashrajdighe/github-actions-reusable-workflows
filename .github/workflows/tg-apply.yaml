@@ -67,6 +67,7 @@ jobs:
       TG_PROVIDER_CACHE_DIR: "/tmp/.terragrunt-cache"
       TERRAGRUNT_NON_INTERACTIVE: true # for backward compatibility
       TG_NON_INTERACTIVE: true
+      GOOGLE_IMPERSONATE_SERVICE_ACCOUNT: ${{ inputs.service_account }}
     environment: ${{ inputs.github_environment }}
     steps:
       - name: "Checkout"
