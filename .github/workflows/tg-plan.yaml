@@ -90,16 +90,18 @@ jobs:
       - name: "Checkout"
         uses: actions/checkout@v4
 
+      # Default wrapper renames the real binary to tofu-bin and sets TOFU_CLI_PATH (see setup-opentofu).
       - name: Setup OpenTofu
         uses: opentofu/setup-opentofu@v2
         with:
           tofu_version: ${{ inputs.tofu_version }}
+          tofu_wrapper: true
 
       - name: Setup Terragrunt
         uses: gruntwork-io/terragrunt-action@v3
         with:
           tg_version: ${{ inputs.tg_version }}
-          tf_path: tofu
+          tf_path: ${{ env.TOFU_CLI_PATH }}/tofu-bin
           github_token: ${{ github.token }}
 
       - name: Configure AWS Credentials for Terragrunt Plan
@@ -118,6 +120,8 @@ jobs:
       - name: Init
         shell: bash
         working-directory: ${{ inputs.working_directory }}
+        env:
+          TERRAGRUNT_TFPATH: ${{ env.TOFU_CLI_PATH }}/tofu-bin
         run: |
           if [ "${{ inputs.disable_terragrunt_init_parallelism_one }}" = "true" ]; then
             terragrunt run-all init
@@ -128,5 +132,7 @@ jobs:
       - name: Plan
         shell: bash
         working-directory: ${{ inputs.working_directory }}
+        env:
+          TERRAGRUNT_TFPATH: ${{ env.TOFU_CLI_PATH }}/tofu-bin
         run: |
           terragrunt run-all plan
