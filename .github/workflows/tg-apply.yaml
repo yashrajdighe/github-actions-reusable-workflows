@@ -1,6 +1,7 @@
+---
 name: Terrgaunt Apply
 
-on:
+"on":
   workflow_call:
     inputs:
       tofu_version:
@@ -63,8 +64,6 @@ jobs:
       image: "public.ecr.aws/z5i5o7e1/yashrajdighe/my-iac:latest"
     env:
       GITHUB_TOKEN: ${{ secrets.github_token }}
-      TG_PROVIDER_CACHE: 1
-      TG_PROVIDER_CACHE_DIR: "/tmp/.terragrunt-cache"
       TERRAGRUNT_NON_INTERACTIVE: true # for backward compatibility
       TG_NON_INTERACTIVE: true
     environment: ${{ inputs.github_environment }}
@@ -74,6 +73,21 @@ jobs:
 
       - name: Create Cache Directory
         run: mkdir -p $TF_PLUGIN_CACHE_DIR
+
+      - name: Cache Terraform providers
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.TF_PLUGIN_CACHE_DIR }}
+          key: ${{ format(
+            'tf-plugins-{0}-{1}',
+            runner.os,
+            hashFiles(format(
+            '{0}/**/.terraform.lock.hcl',
+            inputs.working_directory
+            ))
+            ) }}
+          restore-keys: |
+            tf-plugins-${{ runner.os }}-
 
       - name: Configure AWS Credentials for Terragrunt Apply
         uses: aws-actions/configure-aws-credentials@v4
@@ -93,7 +107,7 @@ jobs:
         shell: bash
         working-directory: ${{ inputs.working_directory }}
         run: |
-          terragrunt run-all init --terragrunt-parallelism 1
+          terragrunt run-all init --terragrunt-parallelism 4
 
       - name: Apply
         shell: bash
