@@ -1,6 +1,7 @@
+---
 name: Terrgaunt Plan
 
-on:
+'on':
   workflow_call:
     inputs:
       tofu_version:
@@ -75,7 +76,7 @@ jobs:
       - checks
     env:
       GITHUB_TOKEN: ${{ secrets.github_token }}
-      TERRAGRUNT_NON_INTERACTIVE: true # for backward compatibility
+      TERRAGRUNT_NON_INTERACTIVE: true  # for backward compatibility
       TG_NON_INTERACTIVE: true
     steps:
       - name: "Checkout"
@@ -88,7 +89,14 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ${{ env.TF_PLUGIN_CACHE_DIR }}
-          key: tf-plugins-${{ runner.os }}-${{ hashFiles(format('{0}/**/.terraform.lock.hcl', inputs.working_directory)) }}
+          key: ${{ format(
+              'tf-plugins-{0}-{1}',
+              runner.os,
+              hashFiles(format(
+                '{0}/**/.terraform.lock.hcl',
+                inputs.working_directory
+              ))
+            ) }}
           restore-keys: |
             tf-plugins-${{ runner.os }}-
 
