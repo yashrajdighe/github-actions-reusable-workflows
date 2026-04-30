@@ -13,6 +13,11 @@ on:
         required: false
         type: string
         default: "0.67.0"
+      runs_on:
+        description: "GitHub Actions runner label (runs-on)"
+        required: false
+        type: string
+        default: "ubuntu-latest"
       working_directory:
         description: "Working directory for terragrunt"
         required: true
@@ -49,7 +54,7 @@ jobs:
     permissions:
       contents: read
       id-token: write
-    runs-on: ubuntu-latest
+    runs-on: ${{ inputs.runs_on }}
     name: OIDC Debugger
     steps:
       - name: Debug OIDC Claims
@@ -58,7 +63,7 @@ jobs:
           audience: "${{ github.server_url }}/${{ github.repository_owner }}"
 
   apply:
-    runs-on: ubuntu-latest
+    runs-on: ${{ inputs.runs_on }}
     container:
       image: "public.ecr.aws/z5i5o7e1/yashrajdighe/my-iac:latest"
     env:
