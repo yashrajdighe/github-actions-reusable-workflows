@@ -13,6 +13,11 @@ on:
         required: false
         type: string
         default: "0.67.0"
+      runs_on:
+        description: "GitHub Actions runner (runs-on) for the apply job only"
+        required: false
+        type: string
+        default: "ubuntu-latest"
       working_directory:
         description: "Working directory for terragrunt"
         required: true
@@ -58,7 +63,7 @@ jobs:
           audience: "${{ github.server_url }}/${{ github.repository_owner }}"
 
   apply:
-    runs-on: ubuntu-latest
+    runs-on: ${{ inputs.runs_on }}
     container:
       image: "public.ecr.aws/z5i5o7e1/yashrajdighe/my-iac:latest"
     env:
