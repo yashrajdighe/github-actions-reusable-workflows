@@ -80,8 +80,6 @@ jobs:
 
   plan:
     runs-on: ${{ inputs.runs_on }}
-    container:
-      image: "public.ecr.aws/z5i5o7e1/yashrajdighe/my-iac:latest"
     needs:
       - checks
     env:
@@ -91,6 +89,18 @@ jobs:
     steps:
       - name: "Checkout"
         uses: actions/checkout@v4
+
+      - name: Setup OpenTofu
+        uses: opentofu/setup-opentofu@v2
+        with:
+          tofu_version: ${{ inputs.tofu_version }}
+
+      - name: Setup Terragrunt
+        uses: gruntwork-io/terragrunt-action@v3
+        with:
+          tg_version: ${{ inputs.tg_version }}
+          tf_path: tofu
+          github_token: ${{ github.token }}
 
       - name: Configure AWS Credentials for Terragrunt Plan
         uses: aws-actions/configure-aws-credentials@v4
