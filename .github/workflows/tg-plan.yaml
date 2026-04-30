@@ -84,6 +84,14 @@ jobs:
       - name: Create Cache Directory
         run: mkdir -p $TF_PLUGIN_CACHE_DIR
 
+      - name: Cache Terraform providers
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.TF_PLUGIN_CACHE_DIR }}
+          key: tf-plugins-${{ runner.os }}-${{ hashFiles(format('{0}/**/.terraform.lock.hcl', inputs.working_directory)) }}
+          restore-keys: |
+            tf-plugins-${{ runner.os }}-
+
       - name: Configure AWS Credentials for Terragrunt Plan
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -102,7 +110,7 @@ jobs:
         shell: bash
         working-directory: ${{ inputs.working_directory }}
         run: |
-          terragrunt run-all init --terragrunt-parallelism 1
+          terragrunt run-all init --terragrunt-parallelism 4
 
       - name: Plan
         shell: bash
