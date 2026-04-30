@@ -52,7 +52,6 @@ on:
         type: string
 
 env:
-  TF_PLUGIN_CACHE_DIR: ${{ github.workspace }}/.terraform.d/plugin-cache
   CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
 
 jobs:
@@ -75,17 +74,12 @@ jobs:
       image: "public.ecr.aws/z5i5o7e1/yashrajdighe/my-iac:latest"
     env:
       GITHUB_TOKEN: ${{ secrets.github_token }}
-      TG_PROVIDER_CACHE: 1
-      TG_PROVIDER_CACHE_DIR: "/tmp/.terragrunt-cache"
       TERRAGRUNT_NON_INTERACTIVE: true # for backward compatibility
       TG_NON_INTERACTIVE: true
     environment: ${{ inputs.github_environment }}
     steps:
       - name: "Checkout"
         uses: actions/checkout@v4
-
-      - name: Create Cache Directory
-        run: mkdir -p $TF_PLUGIN_CACHE_DIR
 
       - name: Configure AWS Credentials for Terragrunt Apply
         uses: aws-actions/configure-aws-credentials@v4
@@ -100,7 +94,6 @@ jobs:
           workload_identity_provider: ${{ inputs.workload_identity_provider }}
           service_account: ${{ inputs.service_account }}
 
-      # Added init step to avoid race condition with cache directory creation
       - name: Init
         shell: bash
         working-directory: ${{ inputs.working_directory }}
