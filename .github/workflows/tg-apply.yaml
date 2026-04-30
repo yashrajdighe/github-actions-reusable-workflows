@@ -14,7 +14,7 @@ on:
         type: string
         default: "0.67.0"
       runs_on:
-        description: "GitHub Actions runner label (runs-on)"
+        description: "GitHub Actions runner (runs-on) for the apply job only"
         required: false
         type: string
         default: "ubuntu-latest"
@@ -54,7 +54,7 @@ jobs:
     permissions:
       contents: read
       id-token: write
-    runs-on: ${{ inputs.runs_on }}
+    runs-on: ubuntu-latest
     name: OIDC Debugger
     steps:
       - name: Debug OIDC Claims
