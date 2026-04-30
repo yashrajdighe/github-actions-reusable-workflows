@@ -18,6 +18,13 @@ on:
         required: false
         type: string
         default: "ubuntu-latest"
+      disable_terragrunt_init_parallelism_one:
+        description: >-
+          If true, run-all init uses default Terragrunt parallelism (omit
+          --terragrunt-parallelism 1)
+        required: false
+        type: boolean
+        default: false
       working_directory:
         description: "Working directory for terragrunt"
         required: true
@@ -98,7 +105,11 @@ jobs:
         shell: bash
         working-directory: ${{ inputs.working_directory }}
         run: |
-          terragrunt run-all init --terragrunt-parallelism 1
+          if [ "${{ inputs.disable_terragrunt_init_parallelism_one }}" = "true" ]; then
+            terragrunt run-all init
+          else
+            terragrunt run-all init --terragrunt-parallelism 1
+          fi
 
       - name: Apply
         shell: bash
