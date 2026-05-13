@@ -47,7 +47,7 @@ jobs:
           aws-region: us-east-1
           role-to-assume: 'arn:aws:iam::183631350996:role/IaC-ReadOnly'
       - name: Get secrets
-        uses: aws-actions/aws-secretsmanager-get-secrets@v2
+        uses: aws-actions/aws-secretsmanager-get-secrets@v3
         with:
           secret-ids: >
             ,arn:aws:secretsmanager:us-east-1:183631350996:secret:github-actions/terraform-cloud-AJdvsd
