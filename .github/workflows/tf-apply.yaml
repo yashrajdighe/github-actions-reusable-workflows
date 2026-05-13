@@ -55,7 +55,7 @@ jobs:
             ,arn:aws:secretsmanager:us-east-1:183631350996:secret:github-actions/terraform-cloud-AJdvsd
           name-transformation: none
           parse-json-secrets: true
-      - uses: hashicorp/setup-terraform@v3
+      - uses: hashicorp/setup-terraform@v4
         with:
           terraform_version: '${{ inputs.terraform-cli-version }}'
       - id: init
