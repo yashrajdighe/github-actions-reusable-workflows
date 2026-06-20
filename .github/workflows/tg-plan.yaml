@@ -68,7 +68,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Check terragrunt HCL
         uses: gruntwork-io/terragrunt-action@v2
@@ -91,7 +91,7 @@ jobs:
       TG_PROVIDER_CACHE_DIR: ${{ github.workspace }}/.terragrunt-provider-cache
     steps:
       - name: "Checkout"
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       # Default wrapper renames the real binary to tofu-bin and sets TOFU_CLI_PATH (see setup-opentofu).
       - name: Setup OpenTofu

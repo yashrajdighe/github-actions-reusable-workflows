@@ -80,7 +80,7 @@ jobs:
     environment: ${{ inputs.github_environment }}
     steps:
       - name: "Checkout"
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       # Default wrapper renames the real binary to tofu-bin and sets TOFU_CLI_PATH (see setup-opentofu).
       - name: Setup OpenTofu

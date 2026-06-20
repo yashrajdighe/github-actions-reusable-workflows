@@ -23,7 +23,7 @@ jobs:
     name: A test of the oidc debugger
     steps:
       - name: Checkout actions-oidc-debugger
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           repository: github/actions-oidc-debugger
           ref: main
@@ -39,7 +39,7 @@ jobs:
         shell: bash
         working-directory: '${{ env.WORKING-DIR }}'
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
